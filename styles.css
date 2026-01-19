@@ -1,0 +1,2388 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Brand Colors */
+    --matlab-blue: #0076A5;
+    --matlab-blue-light: #0099CC;
+    --matlab-blue-dark: #005A7A;
+    
+    --maple-red: #D50000;
+    --maple-red-light: #FF1744;
+    --maple-red-dark: #B71C1C;
+    
+    --mathcad-green: #00A859;
+    --mathcad-green-light: #00E676;
+    --mathcad-green-dark: #00695C;
+    
+    /* Background Colors */
+    --bg-primary: #0A0E27;
+    --bg-secondary: #1A1F3A;
+    --bg-accent: #252B47;
+    
+    /* Text Colors */
+    --text-primary: #FFFFFF;
+    --text-secondary: #B0B8C8;
+    --text-muted: #6B7280;
+    
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 4rem;
+    --spacing-xl: 6rem;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, 
+        var(--matlab-blue) 0%, 
+        var(--maple-red) 50%, 
+        var(--mathcad-green) 100%);
+    border-radius: 6px;
+    border: 2px solid var(--bg-primary);
+    transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, 
+        var(--matlab-blue-light) 0%, 
+        var(--maple-red-light) 50%, 
+        var(--mathcad-green-light) 100%);
+    box-shadow: 0 0 10px rgba(0, 118, 165, 0.5);
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--matlab-blue) var(--bg-primary);
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Navigation Toggle Button */
+.nav-toggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    background: rgba(26, 31, 58, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(1px);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0.9;
+}
+
+.nav-toggle:hover {
+    background: rgba(37, 43, 71, 0.6);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.15);
+    opacity: 1;
+}
+
+.nav-toggle:active {
+    transform: scale(0.98);
+}
+
+.nav-toggle-text {
+    display: inline-block;
+}
+
+/* Dropdown Navigation */
+.dropdown-nav {
+    position: fixed;
+    top: 60px;
+    left: 15px;
+    z-index: 999;
+    min-width: 200px;
+    max-width: 240px;
+    max-height: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+}
+
+.dropdown-nav.active {
+    max-height: 450px;
+    opacity: 0.95;
+    transform: translateY(0) scale(1);
+}
+
+.dropdown-nav.active {
+    max-height: 450px;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0.5rem;
+    margin: 0;
+}
+
+.nav-list li {
+    margin-bottom: 0.25rem;
+}
+
+.nav-list li:last-child {
+    margin-bottom: 0;
+}
+
+.nav-link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-link.active {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive navigation */
+@media (max-width: 768px) {
+    .nav-toggle {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+        top: 12px;
+        left: 12px;
+    }
+    
+    .dropdown-nav {
+        top: 55px;
+        left: 12px;
+        min-width: 180px;
+        max-width: calc(100vw - 24px);
+    }
+    
+    .nav-link {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.math-symbols {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.symbol {
+    position: fixed;
+    color: var(--text-primary);
+    animation: float 20s ease-in-out infinite;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.section-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+/* Color transitions for symbols based on section */
+.introduction .symbol {
+    color: var(--matlab-blue);
+}
+
+.philosophy .symbol {
+    animation: colorShift 8s ease infinite;
+}
+
+.comparison .symbol {
+    animation: colorShift 10s ease infinite;
+}
+
+.example-task .symbol {
+    animation: colorShift 9s ease infinite;
+}
+
+.summary .symbol {
+    animation: colorShift 7s ease infinite;
+}
+
+.conclusion .symbol {
+    animation: colorShift 8.5s ease infinite;
+}
+
+.cta-section .symbol {
+    animation: colorShift 9.5s ease infinite;
+}
+
+@keyframes colorShift {
+    0% {
+        color: var(--matlab-blue);
+        opacity: 0.08;
+    }
+    33% {
+        color: var(--maple-red);
+        opacity: 0.12;
+    }
+    66% {
+        color: var(--mathcad-green);
+        opacity: 0.1;
+    }
+    100% {
+        color: var(--matlab-blue);
+        opacity: 0.08;
+    }
+}
+
+.section.active .symbol {
+    opacity: 0.15;
+    transform: scale(1.1);
+    animation-duration: 15s;
+}
+
+/* Specific positions for symbols - 8 symbols per section */
+.symbol-intro-1 { top: 15vh; left: 5vw; animation-delay: 0s; }
+.symbol-intro-2 { top: 35vh; right: 8vw; animation-delay: 0s; }
+.symbol-intro-3 { top: 55vh; left: 12vw; animation-delay: 0s; }
+.symbol-intro-4 { top: 75vh; right: 10vw; animation-delay: 0s; }
+.symbol-intro-5 { top: 20vh; right: 15vw; animation-delay: 0s; }
+.symbol-intro-6 { top: 60vh; left: 8vw; animation-delay: 0s; }
+.symbol-intro-7 { top: 80vh; right: 12vw; animation-delay: 0s; }
+.symbol-intro-8 { top: 40vh; left: 18vw; animation-delay: 0s; }
+
+.symbol-phil-1 { top: 12vh; left: 6vw; animation-delay: 0s; }
+.symbol-phil-2 { top: 32vh; right: 7vw; animation-delay: 0s; }
+.symbol-phil-3 { top: 52vh; left: 10vw; animation-delay: 0s; }
+.symbol-phil-4 { top: 72vh; right: 9vw; animation-delay: 0s; }
+.symbol-phil-5 { top: 18vh; right: 14vw; animation-delay: 0s; }
+.symbol-phil-6 { top: 58vh; left: 7vw; animation-delay: 0s; }
+.symbol-phil-7 { top: 78vh; right: 11vw; animation-delay: 0s; }
+.symbol-phil-8 { top: 38vh; left: 16vw; animation-delay: 0s; }
+
+.symbol-comp-1 { top: 14vh; left: 4vw; animation-delay: 0s; }
+.symbol-comp-2 { top: 34vh; right: 6vw; animation-delay: 0s; }
+.symbol-comp-3 { top: 54vh; left: 9vw; animation-delay: 0s; }
+.symbol-comp-4 { top: 74vh; right: 8vw; animation-delay: 0s; }
+.symbol-comp-5 { top: 16vh; right: 13vw; animation-delay: 0s; }
+.symbol-comp-6 { top: 56vh; left: 6vw; animation-delay: 0s; }
+.symbol-comp-7 { top: 76vh; right: 10vw; animation-delay: 0s; }
+.symbol-comp-8 { top: 36vh; left: 15vw; animation-delay: 0s; }
+
+.symbol-example-1 { top: 18vh; left: 7vw; animation-delay: 0s; }
+.symbol-example-2 { top: 38vh; right: 9vw; animation-delay: 0s; }
+.symbol-example-3 { top: 58vh; left: 11vw; animation-delay: 0s; }
+.symbol-example-4 { top: 78vh; right: 7vw; animation-delay: 0s; }
+.symbol-example-5 { top: 20vh; right: 16vw; animation-delay: 0s; }
+.symbol-example-6 { top: 60vh; left: 5vw; animation-delay: 0s; }
+.symbol-example-7 { top: 80vh; right: 13vw; animation-delay: 0s; }
+.symbol-example-8 { top: 40vh; left: 17vw; animation-delay: 0s; }
+
+.symbol-life-1 { top: 16vh; left: 8vw; animation-delay: 0s; }
+.symbol-life-2 { top: 36vh; right: 10vw; animation-delay: 0s; }
+.symbol-life-3 { top: 56vh; left: 12vw; animation-delay: 0s; }
+.symbol-life-4 { top: 76vh; right: 8vw; animation-delay: 0s; }
+.symbol-life-5 { top: 22vh; right: 17vw; animation-delay: 0s; }
+.symbol-life-6 { top: 62vh; left: 6vw; animation-delay: 0s; }
+.symbol-life-7 { top: 82vh; right: 14vw; animation-delay: 0s; }
+.symbol-life-8 { top: 42vh; left: 19vw; animation-delay: 0s; }
+
+.symbol-summary-1 { top: 14vh; left: 5vw; animation-delay: 0s; }
+.symbol-summary-2 { top: 34vh; right: 8vw; animation-delay: 0s; }
+.symbol-summary-3 { top: 54vh; left: 10vw; animation-delay: 0s; }
+.symbol-summary-4 { top: 74vh; right: 6vw; animation-delay: 0s; }
+.symbol-summary-5 { top: 18vh; right: 15vw; animation-delay: 0s; }
+.symbol-summary-6 { top: 58vh; left: 7vw; animation-delay: 0s; }
+.symbol-summary-7 { top: 78vh; right: 12vw; animation-delay: 0s; }
+.symbol-summary-8 { top: 38vh; left: 18vw; animation-delay: 0s; }
+
+.symbol-conclusion-1 { top: 16vh; left: 6vw; animation-delay: 0s; }
+.symbol-conclusion-2 { top: 36vh; right: 9vw; animation-delay: 0s; }
+.symbol-conclusion-3 { top: 56vh; left: 11vw; animation-delay: 0s; }
+.symbol-conclusion-4 { top: 76vh; right: 7vw; animation-delay: 0s; }
+.symbol-conclusion-5 { top: 20vh; right: 16vw; animation-delay: 0s; }
+.symbol-conclusion-6 { top: 60vh; left: 5vw; animation-delay: 0s; }
+.symbol-conclusion-7 { top: 80vh; right: 13vw; animation-delay: 0s; }
+.symbol-conclusion-8 { top: 40vh; left: 19vw; animation-delay: 0s; }
+
+.symbol-cta-1 { top: 18vh; left: 7vw; animation-delay: 0s; }
+.symbol-cta-2 { top: 38vh; right: 10vw; animation-delay: 0s; }
+.symbol-cta-3 { top: 58vh; left: 12vw; animation-delay: 0s; }
+.symbol-cta-4 { top: 78vh; right: 8vw; animation-delay: 0s; }
+.symbol-cta-5 { top: 22vh; right: 17vw; animation-delay: 0s; }
+.symbol-cta-6 { top: 62vh; left: 6vw; animation-delay: 0s; }
+.symbol-cta-7 { top: 82vh; right: 14vw; animation-delay: 0s; }
+.symbol-cta-8 { top: 42vh; left: 20vw; animation-delay: 0s; }
+
+.symbol-1 {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.symbol-2 {
+    top: 50%;
+    right: 15%;
+    animation-delay: 5s;
+}
+
+.symbol-3 {
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 10s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    33% {
+        transform: translate(30px, -30px) rotate(120deg);
+    }
+    66% {
+        transform: translate(-20px, 20px) rotate(240deg);
+    }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 900px;
+    padding: var(--spacing-md);
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logo-inner {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.logo-matlab {
+    background: linear-gradient(135deg, var(--matlab-blue), var(--matlab-blue-dark));
+    box-shadow: 0 10px 30px rgba(0, 118, 165, 0.4);
+}
+
+.logo-maple {
+    background: linear-gradient(135deg, var(--maple-red), var(--maple-red-dark));
+    box-shadow: 0 10px 30px rgba(213, 0, 0, 0.4);
+}
+
+.logo-mathcad {
+    background: linear-gradient(135deg, var(--mathcad-green), var(--mathcad-green-dark));
+    box-shadow: 0 10px 30px rgba(0, 168, 89, 0.4);
+}
+
+.logo:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.title-line {
+    display: block;
+}
+
+.hero-subtitle {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+    font-weight: 400;
+}
+
+.scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.scroll-arrow {
+    width: 24px;
+    height: 24px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: rotate(45deg) translateY(0);
+    }
+    50% {
+        transform: rotate(45deg) translateY(10px);
+    }
+}
+
+/* Section Styles */
+.section {
+    min-height: 80vh;
+    padding: var(--spacing-xl) 0;
+    position: relative;
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+    transition: background-position 0.5s ease;
+}
+
+/* Gradient animation for sections */
+.section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(0, 118, 165, 0.05) 0%, 
+        rgba(213, 0, 0, 0.05) 50%, 
+        rgba(0, 168, 89, 0.05) 100%);
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+    opacity: 0;
+    transition: opacity 0.5s ease, background-position 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.section.active::before {
+    opacity: 1;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.section > .container {
+    position: relative;
+    z-index: 2;
+}
+
+.section .floating-elements {
+    z-index: 1;
+}
+
+.section .section-background {
+    z-index: 0;
+}
+
+.section > .container {
+    z-index: 2;
+}
+
+.section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    letter-spacing: -0.02em;
+}
+
+/* Introduction Section */
+.introduction {
+    background: linear-gradient(180deg, var(--bg-primary) 0%, rgba(0, 118, 165, 0.1) 100%);
+    position: relative;
+}
+
+.introduction .container {
+    position: relative;
+    z-index: 1;
+}
+
+.introduction::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(0, 118, 165, 0.1) 0%, 
+        rgba(213, 0, 0, 0.05) 50%, 
+        rgba(0, 168, 89, 0.05) 100%);
+    background-size: 200% 200%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.introduction.active::after {
+    opacity: 1;
+    animation: gradientShift 4s ease infinite;
+}
+
+.content-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.intro-text {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.8;
+}
+
+.intro-question {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    color: var(--text-primary);
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: rgba(0, 118, 165, 0.1);
+    border-left: 4px solid var(--matlab-blue);
+    border-radius: 8px;
+}
+
+/* Philosophy Section */
+.philosophy {
+    background: linear-gradient(180deg, rgba(0, 118, 165, 0.1) 0%, rgba(213, 0, 0, 0.1) 50%, rgba(0, 168, 89, 0.1) 100%);
+    position: relative;
+}
+
+.philosophy .container {
+    position: relative;
+    z-index: 1;
+}
+
+.philosophy::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(0, 118, 165, 0.15) 0%, 
+        rgba(213, 0, 0, 0.15) 50%, 
+        rgba(0, 168, 89, 0.15) 100%);
+    background-size: 200% 200%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.philosophy.active::after {
+    opacity: 1;
+    animation: gradientShift 3s ease infinite;
+}
+
+.philosophy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.philosophy-card {
+    background: rgba(26, 31, 58, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: var(--spacing-md);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    opacity: 1;
+    visibility: visible;
+}
+
+.philosophy-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.card-matlab::before {
+    background: var(--matlab-blue);
+}
+
+.card-maple::before {
+    background: var(--maple-red);
+}
+
+.card-mathcad::before {
+    background: var(--mathcad-green);
+}
+
+.philosophy-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.philosophy-card:hover::before {
+    transform: scaleX(1);
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+}
+
+.card-matlab .card-icon {
+    background: linear-gradient(135deg, var(--matlab-blue), var(--matlab-blue-dark));
+}
+
+.card-maple .card-icon {
+    background: linear-gradient(135deg, var(--maple-red), var(--maple-red-dark));
+}
+
+.card-mathcad .card-icon {
+    background: linear-gradient(135deg, var(--mathcad-green), var(--mathcad-green-dark));
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+}
+
+.card-philosophy {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.card-description {
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+/* Comparison Section */
+.comparison {
+    background: var(--bg-secondary);
+    position: relative;
+}
+
+.comparison .container {
+    position: relative;
+    z-index: 1;
+}
+
+.comparison::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(213, 0, 0, 0.1) 0%, 
+        rgba(0, 168, 89, 0.1) 50%, 
+        rgba(0, 118, 165, 0.1) 100%);
+    background-size: 200% 200%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.comparison.active::after {
+    opacity: 1;
+    animation: gradientShift 3.5s ease infinite;
+}
+
+.criterion-block {
+    margin-bottom: var(--spacing-xl);
+    opacity: 1;
+    visibility: visible;
+}
+
+.criterion-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.criterion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.criterion-item {
+    padding: var(--spacing-lg);
+    border-radius: 12px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.criterion-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    transition: all 0.3s ease;
+}
+
+.criterion-item h4 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    position: relative;
+    display: inline-block;
+    padding-left: var(--spacing-lg);
+    color: var(--text-primary);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.criterion-item h4::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.criterion-item p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: var(--spacing-md);
+    font-size: 1.0625rem;
+}
+
+.criterion-item p strong {
+    color: var(--text-primary);
+    font-size: 1.125rem;
+}
+
+/* MATLAB - прямоугольная карточка с синим градиентом, появляется слева */
+.item-matlab {
+    background: linear-gradient(135deg, rgba(0, 118, 165, 0.2) 0%, rgba(0, 90, 122, 0.15) 100%);
+    border: 2px solid rgba(0, 118, 165, 0.4);
+    border-left: 8px solid var(--matlab-blue);
+    box-shadow: 
+        0 8px 32px rgba(0, 118, 165, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.item-matlab::before {
+    background: linear-gradient(90deg, var(--matlab-blue), var(--matlab-blue-light));
+}
+
+.item-matlab::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 118, 165, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.item-matlab:hover::after {
+    opacity: 1;
+}
+
+.item-matlab h4::before {
+    background: var(--matlab-blue);
+    box-shadow: 0 0 10px rgba(0, 118, 165, 0.5);
+    width: 10px;
+    height: 10px;
+}
+
+.item-matlab:hover {
+    transform: translateX(10px) translateY(-5px) rotate(1deg);
+    background: linear-gradient(135deg, rgba(0, 118, 165, 0.3) 0%, rgba(0, 90, 122, 0.2) 100%);
+    border-color: rgba(0, 118, 165, 0.6);
+    box-shadow: 
+        0 12px 40px rgba(0, 118, 165, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 30px rgba(0, 118, 165, 0.3);
+}
+
+/* Maple - ромбовидная карточка с красным градиентом, появляется сверху */
+.item-maple {
+    background: linear-gradient(135deg, rgba(213, 0, 0, 0.2) 0%, rgba(183, 28, 28, 0.15) 100%);
+    border: 2px solid rgba(213, 0, 0, 0.4);
+    border-left: 8px solid var(--maple-red);
+    border-radius: 0;
+    clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+    box-shadow: 
+        0 8px 32px rgba(213, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.item-maple::before {
+    background: linear-gradient(90deg, var(--maple-red), var(--maple-red-light));
+    height: 4px;
+    clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+}
+
+.item-maple::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 30%, rgba(213, 0, 0, 0.1) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+}
+
+.item-maple:hover::after {
+    transform: translateX(100%);
+}
+
+.item-maple h4::before {
+    background: var(--maple-red);
+    box-shadow: 0 0 10px rgba(213, 0, 0, 0.5);
+    width: 8px;
+    height: 8px;
+    border-radius: 0;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.item-maple:hover {
+    transform: translateX(-10px) translateY(-5px) rotate(-1deg);
+    background: linear-gradient(135deg, rgba(213, 0, 0, 0.3) 0%, rgba(183, 28, 28, 0.2) 100%);
+    border-color: rgba(213, 0, 0, 0.6);
+    box-shadow: 
+        0 12px 40px rgba(213, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 30px rgba(213, 0, 0, 0.3);
+}
+
+/* Mathcad - овальная карточка с зеленым градиентом, появляется снизу */
+.item-mathcad {
+    background: linear-gradient(135deg, rgba(0, 168, 89, 0.2) 0%, rgba(0, 105, 92, 0.15) 100%);
+    border: 2px solid rgba(0, 168, 89, 0.4);
+    border-left: 8px solid var(--mathcad-green);
+    border-radius: 50px 12px 12px 50px;
+    box-shadow: 
+        0 8px 32px rgba(0, 168, 89, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.item-mathcad::before {
+    background: linear-gradient(90deg, var(--mathcad-green), var(--mathcad-green-light));
+    border-radius: 50px 0 0 0;
+    height: 4px;
+}
+
+.item-mathcad::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--mathcad-green), var(--mathcad-green-light));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.item-mathcad:hover::after {
+    transform: scaleX(1);
+}
+
+.item-mathcad h4::before {
+    background: var(--mathcad-green);
+    box-shadow: 0 0 10px rgba(0, 168, 89, 0.5);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.item-mathcad:hover {
+    transform: translateY(-8px) scale(1.03) rotate(0.5deg);
+    background: linear-gradient(135deg, rgba(0, 168, 89, 0.3) 0%, rgba(0, 105, 92, 0.2) 100%);
+    border-color: rgba(0, 168, 89, 0.6);
+    box-shadow: 
+        0 12px 40px rgba(0, 168, 89, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 30px rgba(0, 168, 89, 0.3);
+    border-radius: 60px 15px 15px 60px;
+}
+
+.criterion-item ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: var(--spacing-sm);
+}
+
+.criterion-item li {
+    padding: var(--spacing-sm) 0;
+    padding-left: var(--spacing-lg);
+    position: relative;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: 1rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.criterion-item li:hover {
+    color: var(--text-primary);
+    transform: translateX(5px);
+}
+
+.item-matlab li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--matlab-blue);
+    font-weight: 700;
+}
+
+.item-maple li::before {
+    content: '◆';
+    position: absolute;
+    left: 0;
+    color: var(--maple-red);
+    font-size: 0.75rem;
+}
+
+.item-mathcad li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--mathcad-green);
+    font-weight: 700;
+}
+
+/* Example Task Section */
+.example-task {
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, rgba(0, 118, 165, 0.05) 100%);
+    position: relative;
+}
+
+.example-task .container {
+    position: relative;
+    z-index: 1;
+}
+
+.example-task::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(0, 168, 89, 0.1) 0%, 
+        rgba(0, 118, 165, 0.1) 50%, 
+        rgba(213, 0, 0, 0.1) 100%);
+    background-size: 200% 200%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.example-task.active::after {
+    opacity: 1;
+    animation: gradientShift 4s ease infinite;
+}
+
+.task-intro {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.task-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+}
+
+.task-description {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.equation-box {
+    background: rgba(37, 43, 71, 0.6);
+    border-radius: 12px;
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    border-left: 4px solid var(--matlab-blue);
+}
+
+.equation {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 1.125rem;
+    color: var(--text-primary);
+    margin: var(--spacing-xs) 0;
+    text-align: center;
+}
+
+.equation-conditions {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: var(--spacing-sm);
+    font-style: italic;
+}
+
+.solution-tabs {
+    margin-top: var(--spacing-lg);
+}
+
+.tab-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.tab-button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background: rgba(26, 31, 58, 0.6);
+    color: var(--text-secondary);
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.tab-button:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+}
+
+.tab-button.active {
+    background: linear-gradient(135deg, var(--matlab-blue), var(--matlab-blue-dark));
+    border-color: var(--matlab-blue);
+    color: var(--text-primary);
+}
+
+.tab-button[data-tab="maple"].active {
+    background: linear-gradient(135deg, var(--maple-red), var(--maple-red-dark));
+    border-color: var(--maple-red);
+}
+
+.tab-button[data-tab="mathcad"].active {
+    background: linear-gradient(135deg, var(--mathcad-green), var(--mathcad-green-dark));
+    border-color: var(--mathcad-green);
+}
+
+.tab-content {
+    display: none;
+    opacity: 0;
+}
+
+.tab-content.active {
+    display: block;
+    opacity: 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.code-block {
+    background: rgba(10, 14, 39, 0.8);
+    border-radius: 12px;
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    border-left: 4px solid;
+    overflow-x: auto;
+}
+
+.code-matlab {
+    border-left-color: var(--matlab-blue);
+}
+
+.code-maple {
+    border-left-color: var(--maple-red);
+}
+
+.code-mathcad {
+    border-left-color: var(--mathcad-green);
+}
+
+.code-block pre {
+    margin: 0;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+.code-block code {
+    color: var(--text-primary);
+}
+
+.solution-note {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: rgba(37, 43, 71, 0.4);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+}
+
+.solution-note strong {
+    color: var(--text-primary);
+}
+
+/* Console Output Styles */
+.console-output {
+    background: rgba(10, 14, 39, 0.9);
+    border-radius: 12px;
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    border-left: 4px solid;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.875rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.console-matlab {
+    border-left-color: var(--matlab-blue);
+}
+
+.console-maple {
+    border-left-color: var(--maple-red);
+}
+
+.console-mathcad {
+    border-left-color: var(--mathcad-green);
+}
+
+.console-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.console-title {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 0.9375rem;
+}
+
+.console-status {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(0, 255, 0, 0.1);
+    color: #4ade80;
+}
+
+.console-content {
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.console-line {
+    margin: var(--spacing-xs) 0;
+    padding-left: var(--spacing-sm);
+}
+
+.console-prompt {
+    color: var(--text-muted);
+    margin-right: var(--spacing-xs);
+}
+
+.console-matlab .console-prompt {
+    color: var(--matlab-blue);
+}
+
+.console-maple .console-prompt {
+    color: var(--maple-red);
+}
+
+.console-mathcad .console-prompt {
+    color: var(--mathcad-green);
+}
+
+.console-formula {
+    color: var(--text-primary);
+    font-style: italic;
+    padding-left: var(--spacing-md);
+}
+
+.console-result {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.console-success {
+    color: #4ade80;
+    font-weight: 600;
+    margin-top: var(--spacing-sm);
+}
+
+/* Floating Elements */
+.floating-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.floating-element {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.15;
+    filter: blur(40px);
+    animation: floatAround 20s ease-in-out infinite;
+    transition: all 0.5s ease;
+}
+
+.floating-element[data-color="matlab"] {
+    background: radial-gradient(circle, var(--matlab-blue) 0%, transparent 70%);
+    width: 200px;
+    height: 200px;
+}
+
+.floating-element[data-color="maple"] {
+    background: radial-gradient(circle, var(--maple-red) 0%, transparent 70%);
+    width: 180px;
+    height: 180px;
+}
+
+.floating-element[data-color="mathcad"] {
+    background: radial-gradient(circle, var(--mathcad-green) 0%, transparent 70%);
+    width: 190px;
+    height: 190px;
+}
+
+@keyframes floatAround {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    25% {
+        transform: translate(50px, -50px) scale(1.1);
+    }
+    50% {
+        transform: translate(-30px, 30px) scale(0.9);
+    }
+    75% {
+        transform: translate(40px, 20px) scale(1.05);
+    }
+}
+
+/* Specific positions for floating elements */
+.element-1 {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+    animation-duration: 18s;
+}
+
+.element-2 {
+    top: 60%;
+    right: 15%;
+    animation-delay: 3s;
+    animation-duration: 22s;
+}
+
+.element-3 {
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 6s;
+    animation-duration: 20s;
+}
+
+.element-4 {
+    top: 20%;
+    left: 5%;
+    animation-delay: 1s;
+    animation-duration: 19s;
+}
+
+.element-5 {
+    top: 70%;
+    right: 10%;
+    animation-delay: 4s;
+    animation-duration: 21s;
+}
+
+.element-6 {
+    top: 15%;
+    left: 8%;
+    animation-delay: 0.5s;
+    animation-duration: 18s;
+}
+
+.element-7 {
+    top: 50%;
+    right: 12%;
+    animation-delay: 3.5s;
+    animation-duration: 20s;
+}
+
+.element-8 {
+    bottom: 25%;
+    left: 15%;
+    animation-delay: 7s;
+    animation-duration: 22s;
+}
+
+.element-9 {
+    top: 30%;
+    left: 10%;
+    animation-delay: 2s;
+    animation-duration: 19s;
+}
+
+.element-10 {
+    top: 65%;
+    right: 8%;
+    animation-delay: 5s;
+    animation-duration: 21s;
+}
+
+.element-11 {
+    bottom: 15%;
+    left: 20%;
+    animation-delay: 8s;
+    animation-duration: 18s;
+}
+
+.element-12 {
+    top: 25%;
+    left: 12%;
+    animation-delay: 1.5s;
+    animation-duration: 20s;
+}
+
+.element-13 {
+    bottom: 30%;
+    right: 15%;
+    animation-delay: 6.5s;
+    animation-duration: 22s;
+}
+
+.element-14 {
+    top: 20%;
+    left: 7%;
+    animation-delay: 0.8s;
+    animation-duration: 19s;
+}
+
+.element-15 {
+    top: 60%;
+    right: 10%;
+    animation-delay: 4.2s;
+    animation-duration: 21s;
+}
+
+.element-16 {
+    bottom: 20%;
+    left: 18%;
+    animation-delay: 7.5s;
+    animation-duration: 18s;
+}
+
+.element-17 {
+    top: 35%;
+    left: 9%;
+    animation-delay: 2.3s;
+    animation-duration: 20s;
+}
+
+.element-18 {
+    bottom: 25%;
+    right: 12%;
+    animation-delay: 5.8s;
+    animation-duration: 22s;
+}
+
+.element-19 {
+    top: 15%;
+    left: 6%;
+    animation-delay: 1.2s;
+    animation-duration: 19s;
+}
+
+.element-20 {
+    top: 55%;
+    right: 9%;
+    animation-delay: 4.7s;
+    animation-duration: 21s;
+}
+
+.element-21 {
+    bottom: 15%;
+    left: 22%;
+    animation-delay: 8.3s;
+    animation-duration: 18s;
+}
+
+/* Section Connectors - decorative elements between sections */
+.section-connector {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transform: translateY(-50px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section.active .section-connector {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.connector-top {
+    top: -50px;
+    background: linear-gradient(180deg, 
+        transparent 0%,
+        rgba(0, 118, 165, 0.1) 20%,
+        rgba(213, 0, 0, 0.1) 50%,
+        rgba(0, 168, 89, 0.1) 80%,
+        transparent 100%);
+    mask-image: 
+        radial-gradient(ellipse 200% 100% at 50% 0%, black 40%, transparent 60%),
+        linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+    -webkit-mask-image: 
+        radial-gradient(ellipse 200% 100% at 50% 0%, black 40%, transparent 60%),
+        linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+}
+
+.connector-top::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 60px;
+    background: linear-gradient(180deg, 
+        var(--matlab-blue) 0%,
+        var(--maple-red) 50%,
+        var(--mathcad-green) 100%);
+    box-shadow: 
+        0 0 20px rgba(0, 118, 165, 0.5),
+        0 0 40px rgba(213, 0, 0, 0.3),
+        0 0 60px rgba(0, 168, 89, 0.3);
+    animation: connectorPulse 3s ease infinite;
+}
+
+.connector-top::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%,
+        var(--matlab-blue) 20%,
+        var(--maple-red) 50%,
+        var(--mathcad-green) 80%,
+        transparent 100%);
+    box-shadow: 
+        0 0 15px rgba(0, 118, 165, 0.4),
+        0 0 30px rgba(213, 0, 0, 0.3),
+        0 0 45px rgba(0, 168, 89, 0.3);
+    animation: connectorPulse 3s ease infinite 0.5s;
+}
+
+@keyframes connectorPulse {
+    0%, 100% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+/* Decorative corner elements */
+.section::after {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.section.active::after {
+    opacity: 1;
+}
+
+.introduction::after {
+    top: 0;
+    right: 0;
+    background: linear-gradient(135deg, 
+        transparent 0%,
+        rgba(0, 118, 165, 0.2) 50%,
+        transparent 100%);
+    clip-path: polygon(100% 0, 100% 100%, 0 0);
+    transform: translate(20px, -20px);
+}
+
+.philosophy::after {
+    top: 0;
+    left: 0;
+    background: linear-gradient(225deg, 
+        transparent 0%,
+        rgba(213, 0, 0, 0.2) 50%,
+        transparent 100%);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    transform: translate(-20px, -20px);
+}
+
+.comparison::after {
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(45deg, 
+        transparent 0%,
+        rgba(0, 168, 89, 0.2) 50%,
+        transparent 100%);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    transform: translate(20px, 20px);
+}
+
+.example-task::after {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    width: 150px;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        transparent 0%,
+        var(--matlab-blue) 20%,
+        var(--maple-red) 50%,
+        var(--mathcad-green) 80%,
+        transparent 100%);
+    border-radius: 2px;
+    box-shadow: 0 0 20px rgba(0, 118, 165, 0.5);
+}
+
+.real-life-examples::after {
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(315deg, 
+        transparent 0%,
+        rgba(0, 118, 165, 0.2) 50%,
+        transparent 100%);
+    clip-path: polygon(0 0, 100% 100%, 0 100%);
+    transform: translate(-20px, 20px);
+}
+
+.summary::after {
+    top: 50%;
+    right: 0;
+    transform: translate(20px, -50%);
+    width: 4px;
+    height: 150px;
+    background: linear-gradient(180deg, 
+        var(--matlab-blue) 0%,
+        var(--maple-red) 50%,
+        var(--mathcad-green) 100%);
+    border-radius: 2px;
+    box-shadow: 0 0 20px rgba(0, 118, 165, 0.5);
+}
+
+.conclusion::after {
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(45deg, 
+        transparent 0%,
+        rgba(213, 0, 0, 0.2) 50%,
+        transparent 100%);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    transform: translate(20px, 20px);
+}
+
+.cta-section::after {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    width: 200px;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        var(--mathcad-green) 0%,
+        var(--matlab-blue) 50%,
+        var(--maple-red) 100%);
+    border-radius: 2px;
+    box-shadow: 
+        0 0 20px rgba(0, 168, 89, 0.5),
+        0 0 40px rgba(0, 118, 165, 0.3);
+}
+
+/* Grid background for all sections - moved to separate pseudo-element */
+.section-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.section.active .section-grid {
+    opacity: 0.8;
+    animation: gridPulse 3s ease infinite;
+}
+
+@keyframes gridPulse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* Connect symbols between sections with lines */
+.symbol-connector {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.connector-svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.25;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.connector-path {
+    stroke-dashoffset: 0;
+}
+
+.symbol-connector path {
+    stroke: currentColor;
+    stroke-width: 3;
+    fill: none;
+    stroke-dasharray: 10, 10;
+    stroke-dashoffset: 0;
+    animation: dashMove 30s linear infinite;
+    opacity: 0.15;
+    transition: opacity 0.5s ease;
+}
+
+.section.active ~ .section .symbol-connector path,
+.section.active .symbol-connector path {
+    opacity: 0.25;
+}
+
+body.scrolling .symbol-connector path {
+    opacity: 0.3;
+    animation-duration: 15s;
+}
+
+@keyframes dashMove {
+    0% {
+        stroke-dashoffset: 0;
+    }
+    100% {
+        stroke-dashoffset: 100;
+    }
+}
+
+/* Real Life Examples Section */
+.real-life-examples {
+    background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    position: relative;
+}
+
+.real-life-examples .container {
+    position: relative;
+    z-index: 2;
+}
+
+.real-life-examples::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(0, 168, 89, 0.08) 0%, 
+        rgba(0, 118, 165, 0.08) 50%, 
+        rgba(213, 0, 0, 0.08) 100%);
+    background-size: 200% 200%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.real-life-examples.active::after {
+    opacity: 1;
+    animation: gradientShift 3.5s ease infinite;
+}
+
+.section-subtitle {
+    text-align: center;
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.life-examples-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+.life-example-card {
+    background: rgba(26, 31, 58, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: var(--spacing-lg);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.life-example-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.life-example-card.card-matlab::before {
+    background: linear-gradient(90deg, var(--matlab-blue), var(--matlab-blue-light));
+}
+
+.life-example-card.card-maple::before {
+    background: linear-gradient(90deg, var(--maple-red), var(--maple-red-light));
+}
+
+.life-example-card.card-mathcad::before {
+    background: linear-gradient(90deg, var(--mathcad-green), var(--mathcad-green-light));
+}
+
+.life-example-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.life-example-card:hover::before {
+    transform: scaleX(1);
+}
+
+.example-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.example-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    padding: var(--spacing-xs);
+    flex-shrink: 0;
+}
+
+.example-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+}
+
+.life-example-card.card-matlab .example-icon {
+    background: linear-gradient(135deg, rgba(0, 118, 165, 0.2), rgba(0, 90, 122, 0.15));
+    color: var(--matlab-blue);
+}
+
+.life-example-card.card-maple .example-icon {
+    background: linear-gradient(135deg, rgba(213, 0, 0, 0.2), rgba(183, 28, 28, 0.15));
+    color: var(--maple-red);
+}
+
+.life-example-card.card-mathcad .example-icon {
+    background: linear-gradient(135deg, rgba(0, 168, 89, 0.2), rgba(0, 105, 92, 0.15));
+    color: var(--mathcad-green);
+}
+
+.example-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.example-situation,
+.example-solution {
+    margin-bottom: var(--spacing-md);
+}
+
+.example-situation h4,
+.example-solution h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.example-situation p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+.solution-code {
+    background: rgba(10, 14, 39, 0.9);
+    border-radius: 12px;
+    padding: var(--spacing-md);
+    margin: var(--spacing-sm) 0;
+    border-left: 4px solid;
+    overflow-x: auto;
+}
+
+.life-example-card.card-matlab .solution-code {
+    border-left-color: var(--matlab-blue);
+}
+
+.life-example-card.card-maple .solution-code {
+    border-left-color: var(--maple-red);
+}
+
+.life-example-card.card-mathcad .solution-code {
+    border-left-color: var(--mathcad-green);
+}
+
+.solution-code pre {
+    margin: 0;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+.solution-code code {
+    color: var(--text-primary);
+}
+
+.solution-result {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: rgba(37, 43, 71, 0.5);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: 0.9375rem;
+}
+
+.solution-result strong {
+    color: var(--text-primary);
+}
+
+/* Summary Table Section */
+.summary {
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    position: relative;
+}
+
+.summary .container {
+    position: relative;
+    z-index: 1;
+}
+
+.summary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(0, 118, 165, 0.08) 0%, 
+        rgba(213, 0, 0, 0.08) 50%, 
+        rgba(0, 168, 89, 0.08) 100%);
+    background-size: 200% 200%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.summary.active::after {
+    opacity: 1;
+    animation: gradientShift 3s ease infinite;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-top: var(--spacing-lg);
+    opacity: 1;
+    visibility: visible;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(26, 31, 58, 0.4);
+    border-radius: 12px;
+    overflow: hidden;
+    min-width: 600px;
+}
+
+.comparison-table th {
+    background: rgba(37, 43, 71, 0.8);
+    padding: var(--spacing-md);
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1.125rem;
+}
+
+.comparison-table td {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+}
+
+.comparison-table tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.comparison-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Conclusion Section */
+.conclusion {
+    background: var(--bg-primary);
+    position: relative;
+}
+
+.conclusion .container {
+    position: relative;
+    z-index: 1;
+}
+
+.conclusion::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(213, 0, 0, 0.08) 0%, 
+        rgba(0, 168, 89, 0.08) 50%, 
+        rgba(0, 118, 165, 0.08) 100%);
+    background-size: 200% 200%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.conclusion.active::after {
+    opacity: 1;
+    animation: gradientShift 3.5s ease infinite;
+}
+
+.decision-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.decision-card {
+    background: rgba(26, 31, 58, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: var(--spacing-md);
+    border-top: 4px solid;
+    transition: all 0.3s ease;
+    opacity: 1;
+    visibility: visible;
+}
+
+.decision-card.card-matlab {
+    border-top-color: var(--matlab-blue);
+}
+
+.decision-card.card-maple {
+    border-top-color: var(--maple-red);
+}
+
+.decision-card.card-mathcad {
+    border-top-color: var(--mathcad-green);
+}
+
+.decision-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.decision-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+}
+
+.decision-card ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.decision-card li {
+    padding: var(--spacing-xs) 0;
+    padding-left: var(--spacing-md);
+    position: relative;
+    color: var(--text-secondary);
+}
+
+.decision-card li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+}
+
+.decision-card.card-matlab li::before {
+    color: var(--matlab-blue);
+}
+
+.decision-card.card-maple li::before {
+    color: var(--maple-red);
+}
+
+.decision-card.card-mathcad li::before {
+    color: var(--mathcad-green);
+}
+
+/* CTA Section */
+.cta-section {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    text-align: center;
+    position: relative;
+}
+
+.cta-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.cta-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(0, 168, 89, 0.1) 0%, 
+        rgba(0, 118, 165, 0.1) 50%, 
+        rgba(213, 0, 0, 0.1) 100%);
+    background-size: 200% 200%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.cta-section.active::after {
+    opacity: 1;
+    animation: gradientShift 4s ease infinite;
+}
+
+.cta-text {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-lg);
+}
+
+.cta-button {
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    opacity: 1;
+    visibility: visible;
+}
+
+.button-matlab {
+    background: linear-gradient(135deg, var(--matlab-blue), var(--matlab-blue-dark));
+}
+
+.button-matlab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 118, 165, 0.5);
+}
+
+.button-maple {
+    background: linear-gradient(135deg, var(--maple-red), var(--maple-red-dark));
+}
+
+.button-maple:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(213, 0, 0, 0.5);
+}
+
+.button-mathcad {
+    background: linear-gradient(135deg, var(--mathcad-green), var(--mathcad-green-dark));
+}
+
+.button-mathcad:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 168, 89, 0.5);
+}
+
+.cta-footer {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .logo-container {
+        gap: var(--spacing-md);
+    }
+    
+    .logo {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .logo-inner {
+        font-size: 2rem;
+    }
+    
+    .philosophy-grid,
+    .criterion-grid,
+    .decision-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .cta-button {
+        width: 100%;
+    }
+}
+
+/* Utility Classes */
+.opacity-0 {
+    opacity: 0;
+}
+
+.opacity-1 {
+    opacity: 1;
+}
+
