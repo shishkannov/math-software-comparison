@@ -1,98 +1,374 @@
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    initAnimations();
-    initNavigation();
+    // Initialize slides first
+    initSlides();
+    // Then initialize other animations
+    if (typeof gsap !== 'undefined') {
+        initAnimations();
+    }
 });
 
-function initNavigation() {
-    const navToggle = document.getElementById('navToggle');
-    const dropdownNav = document.getElementById('dropdownNav');
-    const navToggleText = navToggle.querySelector('.nav-toggle-text');
-    const navLinks = document.querySelectorAll('.nav-link');
-    let isNavOpen = false;
+// Slides Presentation System
+function initSlides() {
+    const slidesContainer = document.getElementById('slidesContainer');
+    if (!slidesContainer) return;
     
-    // Toggle navigation
-    function toggleNav() {
-        isNavOpen = !isNavOpen;
-        dropdownNav.classList.toggle('active');
-        
-        // Change button text
-        if (isNavOpen) {
-            navToggleText.textContent = 'Скрыть навигацию';
-        } else {
-            navToggleText.textContent = 'Показать навигацию';
-        }
-    }
+    // Get all slides directly from container
+    const allSlides = slidesContainer.querySelectorAll('.slide');
+    if (!allSlides || allSlides.length === 0) return;
     
-    navToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleNav();
+    // Convert to array and sort by data-slide
+    const slides = Array.from(allSlides).sort((a, b) => {
+        const aNum = parseInt(a.getAttribute('data-slide')) || 999;
+        const bNum = parseInt(b.getAttribute('data-slide')) || 999;
+        return aNum - bNum;
     });
     
-    // Close nav when clicking outside
-    document.addEventListener('click', (e) => {
-        if (isNavOpen && !dropdownNav.contains(e.target) && !navToggle.contains(e.target)) {
-            toggleNav();
-        }
-    });
+    const prevButton = document.getElementById('prevSlide');
+    const nextButton = document.getElementById('nextSlide');
+    const currentSlideEl = document.getElementById('currentSlide');
+    const totalSlidesEl = document.getElementById('totalSlides');
     
-    // Smooth scroll to section
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            
-            if (targetSection) {
-                const offset = 100;
-                const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - offset;
-                
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-                
-                // Navigation stays open - no closing
+    if (!prevButton || !nextButton || !currentSlideEl || !totalSlidesEl) return;
+    
+    let currentSlideIndex = 0;
+    const totalSlides = slides.length;
+    
+    totalSlidesEl.textContent = totalSlides;
+    
+    // Function to show a specific slide
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            if (i === index) {
+                slide.style.display = 'block';
+                slide.style.opacity = '1';
+                slide.style.visibility = 'visible';
+                slide.style.transform = 'translateX(0)';
+                slide.style.zIndex = '10';
+                slide.classList.add('active');
+            } else {
+                slide.style.display = 'none';
+                slide.style.opacity = '0';
+                slide.style.visibility = 'hidden';
+                slide.style.transform = 'translateX(100%)';
+                slide.style.zIndex = '0';
+                slide.classList.remove('active');
             }
         });
-    });
+    }
     
-    // Highlight active section in navigation
-    const sections = document.querySelectorAll('section[id]');
+    // Initialize - show first slide
+    showSlide(0);
+    setTimeout(() => {
+        animateSlideContent(slides[0]);
+    }, 100);
     
-    function updateActiveNav() {
-        const scrollPos = window.scrollY + 200;
-        let currentSection = '';
+    updateSlideCounter();
+    updateNavButtons();
+    
+    // Initialize navigation
+    initNavigation(slides);
+    updateNavigation();
+    
+    // Animate slide content when slide becomes active
+    function animateSlideContent(slide) {
+        if (typeof gsap === 'undefined') {
+            // Fallback if GSAP not loaded
+            const elements = slide.querySelectorAll('.section-title, .hero-title, .hero-subtitle, .logo, .philosophy-card, .criterion-item, .tab-content, .life-example-card, .comparison-table, .decision-card, .cta-button');
+            elements.forEach((el) => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            });
+            return;
+        }
         
-        // Check hero section first
-        const hero = document.getElementById('hero');
-        if (hero && window.scrollY < hero.offsetHeight * 0.5) {
-            currentSection = 'hero';
+        // Hero slide specific animations
+        if (slide.classList.contains('hero')) {
+            const logos = slide.querySelectorAll('.logo');
+            const titleLines = slide.querySelectorAll('.hero-title .title-line');
+            const subtitle = slide.querySelector('.hero-subtitle');
+            
+            gsap.set([...logos, ...titleLines, subtitle], { opacity: 0, y: 30 });
+            
+            gsap.to(logos, {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: 'back.out(1.7)'
+            });
+            
+            gsap.to(titleLines, {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                delay: 0.3,
+                ease: 'power3.out'
+            });
+            
+            gsap.to(subtitle, {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                delay: 0.5,
+                ease: 'power2.out'
+            });
         } else {
-            // Check other sections
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.offsetHeight;
-                const sectionId = section.id;
-                
-                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
-                    currentSection = sectionId;
+            // Other slides - animate section title and content
+            const sectionTitle = slide.querySelector('.section-title');
+            const introText = slide.querySelectorAll('.intro-text, .intro-question');
+            const contentWrapper = slide.querySelector('.content-wrapper');
+            const criterionTitle = slide.querySelector('.criterion-title');
+            const contentElements = slide.querySelectorAll('.philosophy-card, .criterion-item, .tab-content, .life-example-card, .decision-card, .cta-button, .comparison-table, .example-task-layout, .life-example-layout, .container > *:not(.section-title):not(.section-grid):not(.section-background):not(.floating-elements):not(.section-connector)');
+            
+            if (sectionTitle) {
+                gsap.from(sectionTitle, {
+                    opacity: 0,
+                    y: -30,
+                    duration: 0.6,
+                    ease: 'power3.out'
+                });
+            }
+            
+            if (criterionTitle) {
+                gsap.from(criterionTitle, {
+                    opacity: 0,
+                    y: -20,
+                    duration: 0.5,
+                    delay: 0.2,
+                    ease: 'power2.out'
+                });
+            }
+            
+            // Animate intro text and content wrapper
+            if (contentWrapper) {
+                const texts = contentWrapper.querySelectorAll('.intro-text, .intro-question');
+                if (texts.length > 0) {
+                    texts.forEach((text, i) => {
+                        gsap.set(text, { opacity: 0, y: 20 });
+                        gsap.to(text, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.6,
+                            delay: 0.3 + (i * 0.1),
+                            ease: 'power2.out'
+                        });
+                    });
+                } else {
+                    gsap.set(contentWrapper, { opacity: 0, y: 20 });
+                    gsap.to(contentWrapper, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.6,
+                        delay: 0.3,
+                        ease: 'power2.out'
+                    });
+                }
+            } else if (introText.length > 0) {
+                introText.forEach((text, i) => {
+                    gsap.set(text, { opacity: 0, y: 20 });
+                    gsap.to(text, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.6,
+                        delay: 0.3 + (i * 0.1),
+                        ease: 'power2.out'
+                    });
+                });
+            }
+            
+            contentElements.forEach((el, i) => {
+                if (el && el.offsetParent !== null && !el.classList.contains('content-wrapper')) { // Only visible elements
+                    gsap.from(el, {
+                        opacity: 0,
+                        y: 30,
+                        duration: 0.5,
+                        delay: 0.3 + (i * 0.05),
+                        ease: 'power2.out'
+                    });
                 }
             });
         }
+    }
+    
+    // Go to slide function
+    function goToSlide(index) {
+        if (index < 0 || index >= totalSlides) return;
+        if (index === currentSlideIndex) return;
         
-        // Update nav links
-        navLinks.forEach(link => {
+        currentSlideIndex = index;
+        showSlide(index);
+        
+        // Animate content
+        setTimeout(() => {
+            animateSlideContent(slides[index]);
+        }, 100);
+        
+        updateSlideCounter();
+        updateNavButtons();
+        updateNavigation();
+    }
+    
+    // Initialize navigation menu
+    function initNavigation(slidesArray) {
+        const navList = document.getElementById('navList');
+        const navToggle = document.getElementById('navToggle');
+        const dropdownNav = document.getElementById('dropdownNav');
+        const navToggleText = navToggle.querySelector('.nav-toggle-text');
+        let isNavOpen = false;
+        
+        if (!navList || !navToggle || !dropdownNav) return;
+        
+        // Clear existing navigation
+        navList.innerHTML = '';
+        
+        // Slide names mapping
+        const slideNames = {
+            'hero': 'Главная',
+            'introduction': 'Введение',
+            'philosophy': 'Философия',
+            'comparison-1': 'Сравнение 1',
+            'comparison-2': 'Сравнение 2',
+            'comparison-3': 'Сравнение 3',
+            'comparison-4': 'Сравнение 4',
+            'example-task-matlab': 'Пример MATLAB',
+            'example-task-maple': 'Пример Maple',
+            'example-task-mathcad': 'Пример MathCad',
+            'real-life-examples-1': 'Пример MATLAB',
+            'real-life-examples-2': 'Пример Maple',
+            'real-life-examples-3': 'Пример MathCad',
+            'summary': 'Сводная таблица',
+            'conclusion': 'Заключение',
+            'thank-you': 'Спасибо'
+        };
+        
+        // Create navigation items
+        slidesArray.forEach((slide, index) => {
+            const slideId = slide.id;
+            const slideName = slideNames[slideId] || slideId;
+            const slideNumber = index + 1;
+            
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = `#${slideId}`;
+            a.className = 'nav-link';
+            a.setAttribute('data-slide-index', index);
+            a.textContent = `${slideNumber}. ${slideName}`;
+            
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                goToSlide(index);
+            });
+            
+            li.appendChild(a);
+            navList.appendChild(li);
+        });
+        
+        // Toggle navigation
+        function toggleNav() {
+            isNavOpen = !isNavOpen;
+            dropdownNav.classList.toggle('active');
+            
+            if (isNavOpen) {
+                navToggleText.textContent = 'Скрыть навигацию';
+            } else {
+                navToggleText.textContent = 'Показать навигацию';
+            }
+        }
+        
+        navToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleNav();
+        });
+        
+        // Close nav when clicking outside
+        document.addEventListener('click', (e) => {
+            if (isNavOpen && !dropdownNav.contains(e.target) && !navToggle.contains(e.target)) {
+                toggleNav();
+            }
+        });
+    }
+    
+    // Update active navigation link
+    function updateNavigation() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach((link, index) => {
             link.classList.remove('active');
-            if (link.getAttribute('data-section') === currentSection) {
+            if (index === currentSlideIndex) {
                 link.classList.add('active');
             }
         });
     }
     
-    // Update on scroll
-    window.addEventListener('scroll', updateActiveNav);
-    updateActiveNav(); // Initial check
+    // Update slide counter
+    function updateSlideCounter() {
+        currentSlideEl.textContent = currentSlideIndex + 1;
+    }
+    
+    // Update navigation buttons
+    function updateNavButtons() {
+        prevButton.disabled = currentSlideIndex === 0;
+        nextButton.disabled = currentSlideIndex === totalSlides - 1;
+    }
+    
+    // Previous slide
+    prevButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (currentSlideIndex > 0) {
+            goToSlide(currentSlideIndex - 1);
+        }
+    });
+    
+    // Next slide
+    nextButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (currentSlideIndex < totalSlides - 1) {
+            goToSlide(currentSlideIndex + 1);
+        }
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft' && currentSlideIndex > 0) {
+            e.preventDefault();
+            goToSlide(currentSlideIndex - 1);
+        } else if (e.key === 'ArrowRight' && currentSlideIndex < totalSlides - 1) {
+            e.preventDefault();
+            goToSlide(currentSlideIndex + 1);
+        }
+    });
+    
+    // Touch/swipe support (optional)
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    document.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0 && currentSlideIndex < totalSlides - 1) {
+                // Swipe left - next slide
+                goToSlide(currentSlideIndex + 1);
+            } else if (diff < 0 && currentSlideIndex > 0) {
+                // Swipe right - previous slide
+                goToSlide(currentSlideIndex - 1);
+            }
+        }
+    }
 }
 
 function initAnimations() {
@@ -104,8 +380,8 @@ function initAnimations() {
     
     gsap.registerPlugin(ScrollTrigger);
 
-    // Set up smooth scrolling
-    document.documentElement.style.scrollBehavior = 'smooth';
+    // Disable smooth scrolling for slides
+    document.documentElement.style.scrollBehavior = 'auto';
 
     // Hero Section Animations
     const heroTimeline = gsap.timeline();
