@@ -77,6 +77,172 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Slides Container */
+.slides-container {
+    width: 100%;
+    position: relative;
+    overflow: visible;
+}
+
+/* Slide Styles */
+.slide {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(100%);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.6s;
+    overflow: hidden;
+    z-index: 0;
+    will-change: transform, opacity;
+    display: block;
+    background: var(--bg-primary);
+    pointer-events: none;
+}
+
+/* First slide should be visible by default - but let JS handle it */
+
+.slide.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(0) !important;
+    z-index: 1 !important;
+    pointer-events: auto !important;
+    display: block !important;
+}
+
+.slide.prev {
+    transform: translateX(-100%);
+    z-index: 0;
+}
+
+/* Ensure content is visible on active slides */
+.slide.active {
+    pointer-events: auto;
+}
+
+.slide.active .container,
+.slide.active .hero-content,
+.slide.active .section-title,
+.slide.active .philosophy-card,
+.slide.active .criterion-item,
+.slide.active .tab-content,
+.slide.active .life-example-card,
+.slide.active .comparison-table,
+.slide.active .table-wrapper {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.slide.active .comparison-table {
+    display: table !important;
+}
+
+.slide.active .comparison-table,
+.slide.active .decision-card,
+.slide.active .cta-button {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: block !important;
+}
+
+/* Hide content on inactive slides */
+.slide:not(.active) .container,
+.slide:not(.active) .hero-content {
+    pointer-events: none;
+}
+
+/* Slide Counter */
+.slide-counter {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: rgba(26, 31, 58, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.current-slide {
+    color: var(--matlab-blue);
+}
+
+.slide-separator {
+    color: var(--text-secondary);
+}
+
+.total-slides {
+    color: var(--text-secondary);
+}
+
+/* Navigation Arrows */
+.slide-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(26, 31, 58, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.slide-nav svg {
+    width: 24px;
+    height: 24px;
+}
+
+.slide-nav:hover {
+    background: rgba(37, 43, 71, 0.9);
+    transform: translateY(-50%) scale(1.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.slide-nav:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.slide-nav-prev {
+    left: 20px;
+}
+
+.slide-nav-next {
+    right: 20px;
+}
+
+.slide-nav:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.slide-nav:disabled:hover {
+    transform: translateY(-50%) scale(1);
 }
 
 /* Navigation Toggle Button */
@@ -84,7 +250,7 @@ body {
     position: fixed;
     top: 15px;
     left: 15px;
-    z-index: 1000;
+    z-index: 1001;
     padding: 0.5rem 0.75rem;
     border-radius: 8px;
     background: rgba(26, 31, 58, 0.5);
@@ -123,16 +289,19 @@ body {
     position: fixed;
     top: 60px;
     left: 15px;
-    z-index: 999;
+    z-index: 1000;
     min-width: 200px;
     max-width: 240px;
     max-height: 0;
     overflow: hidden;
+    background: rgba(26, 31, 58, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0;
     transform: translateY(-10px) scale(0.95);
+    backdrop-filter: blur(1px);
 }
 
 .dropdown-nav.active {
@@ -208,7 +377,18 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    position: relative;
+    z-index: 2;
+    visibility: visible;
+    opacity: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
+    padding-top: 30px;
 }
 
 /* Hero Section */
@@ -220,6 +400,7 @@ body {
     justify-content: center;
     overflow: hidden;
     background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    z-index: 1;
 }
 
 .hero-background {
@@ -417,10 +598,18 @@ body {
 
 .hero-content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     text-align: center;
     max-width: 900px;
     padding: var(--spacing-md);
+    visibility: visible;
+    opacity: 1;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
 }
 
 .logo-container {
@@ -516,7 +705,7 @@ body {
 
 /* Section Styles */
 .section {
-    min-height: 80vh;
+    min-height: 100vh;
     padding: var(--spacing-xl) 0;
     position: relative;
     background-size: 200% 200%;
@@ -579,11 +768,17 @@ body {
 }
 
 .section-title {
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
     font-weight: 700;
     text-align: center;
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-sm);
+    margin-top: 0;
     letter-spacing: -0.02em;
+}
+
+.introduction .section-title {
+    margin-bottom: var(--spacing-lg);
+    margin-top: 0;
 }
 
 /* Introduction Section */
@@ -623,20 +818,29 @@ body {
 .content-wrapper {
     max-width: 800px;
     margin: 0 auto;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100%;
+}
+
+.intro-text,
+.intro-question {
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .intro-text {
-    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    font-size: clamp(0.9rem, 1.3vw, 1rem);
     color: var(--text-secondary);
-    margin-bottom: var(--spacing-md);
-    line-height: 1.8;
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.6;
 }
 
 .intro-question {
-    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    font-size: clamp(1rem, 1.6vw, 1.125rem);
     color: var(--text-primary);
-    margin-top: var(--spacing-lg);
-    padding: var(--spacing-md);
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-sm);
     background: rgba(0, 118, 165, 0.1);
     border-left: 4px solid var(--matlab-blue);
     border-radius: 8px;
@@ -678,9 +882,11 @@ body {
 
 .philosophy-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--spacing-md);
-    margin-top: var(--spacing-lg);
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+    max-height: calc(100vh - 180px);
+    overflow: hidden;
 }
 
 .philosophy-card {
@@ -817,23 +1023,39 @@ body {
     font-size: 1.75rem;
     font-weight: 700;
     margin-bottom: var(--spacing-md);
+    margin-top: var(--spacing-lg);
     text-align: center;
     color: var(--text-primary);
 }
 
 .criterion-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--spacing-md);
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+    max-height: calc(100vh - 200px);
+    overflow: hidden;
+}
+
+.criterion-title {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    margin-top: var(--spacing-lg);
+    color: var(--text-primary);
+    text-align: center;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .criterion-item {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     border-radius: 12px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
     backdrop-filter: blur(10px);
+    font-size: clamp(0.85rem, 1.1vw, 0.95rem);
 }
 
 .criterion-item::before {
@@ -1094,6 +1316,10 @@ body {
 .example-task .container {
     position: relative;
     z-index: 1;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .example-task::after {
@@ -1233,10 +1459,19 @@ body {
 .code-block {
     background: rgba(10, 14, 39, 0.8);
     border-radius: 12px;
-    padding: var(--spacing-md);
-    margin: var(--spacing-md) 0;
+    padding: var(--spacing-sm);
+    margin: var(--spacing-sm) 0;
     border-left: 4px solid;
-    overflow-x: auto;
+    overflow: visible;
+    max-height: none;
+}
+
+.code-block pre {
+    overflow: visible;
+    max-height: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
 }
 
 .code-matlab {
@@ -1251,12 +1486,12 @@ body {
     border-left-color: var(--mathcad-green);
 }
 
-.code-block pre {
-    margin: 0;
+.code-block pre code {
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    font-size: 0.875rem;
-    line-height: 1.6;
+    font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+    line-height: 1.5;
     color: var(--text-primary);
+    display: block;
 }
 
 .code-block code {
@@ -1264,6 +1499,7 @@ body {
 }
 
 .solution-note {
+    display: none;
     margin-top: var(--spacing-md);
     padding: var(--spacing-md);
     background: rgba(37, 43, 71, 0.4);
@@ -1869,6 +2105,7 @@ body.scrolling .symbol-connector path {
 .real-life-examples .container {
     position: relative;
     z-index: 2;
+    padding-top: 10px;
 }
 
 .real-life-examples::after {
@@ -1915,11 +2152,12 @@ body.scrolling .symbol-connector path {
     background: rgba(26, 31, 58, 0.7);
     backdrop-filter: blur(10px);
     border-radius: 16px;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-sm);
     border: 2px solid rgba(255, 255, 255, 0.1);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
+    max-height: none;
 }
 
 .life-example-card::before {
@@ -1958,8 +2196,8 @@ body.scrolling .symbol-connector path {
 .example-header {
     display: flex;
     align-items: center;
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
 }
 
 .example-icon {
@@ -1995,7 +2233,7 @@ body.scrolling .symbol-connector path {
 }
 
 .example-title {
-    font-size: 1.5rem;
+    font-size: clamp(1.1rem, 1.5vw, 1.3rem);
     font-weight: 700;
     color: var(--text-primary);
     margin: 0;
@@ -2003,7 +2241,7 @@ body.scrolling .symbol-connector path {
 
 .example-situation,
 .example-solution {
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-xs);
 }
 
 .example-situation h4,
@@ -2016,17 +2254,19 @@ body.scrolling .symbol-connector path {
 
 .example-situation p {
     color: var(--text-secondary);
-    line-height: 1.7;
-    font-size: 1rem;
+    line-height: 1.4;
+    font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+    margin: var(--spacing-xs) 0;
 }
 
 .solution-code {
     background: rgba(10, 14, 39, 0.9);
     border-radius: 12px;
-    padding: var(--spacing-md);
-    margin: var(--spacing-sm) 0;
+    padding: var(--spacing-xs);
+    margin: var(--spacing-xs) 0;
     border-left: 4px solid;
-    overflow-x: auto;
+    overflow: visible;
+    max-height: none;
 }
 
 .life-example-card.card-matlab .solution-code {
@@ -2041,12 +2281,22 @@ body.scrolling .symbol-connector path {
     border-left-color: var(--mathcad-green);
 }
 
+.solution-code {
+    overflow: visible;
+    max-height: none;
+}
+
 .solution-code pre {
     margin: 0;
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    font-size: 0.875rem;
-    line-height: 1.6;
+    font-size: clamp(0.6rem, 0.75vw, 0.7rem);
+    line-height: 1.3;
     color: var(--text-primary);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow: visible;
+    max-height: none;
+    padding: var(--spacing-xs);
 }
 
 .solution-code code {
@@ -2054,13 +2304,13 @@ body.scrolling .symbol-connector path {
 }
 
 .solution-result {
-    margin-top: var(--spacing-md);
-    padding: var(--spacing-md);
+    margin-top: var(--spacing-xs);
+    padding: var(--spacing-xs);
     background: rgba(37, 43, 71, 0.5);
     border-radius: 8px;
     color: var(--text-secondary);
-    line-height: 1.7;
-    font-size: 0.9375rem;
+    line-height: 1.4;
+    font-size: clamp(0.7rem, 0.9vw, 0.8rem);
 }
 
 .solution-result strong {
@@ -2092,7 +2342,7 @@ body.scrolling .symbol-connector path {
     background-size: 200% 200%;
     opacity: 0;
     transition: opacity 0.5s ease;
-    pointer-events: none;
+    pointer-events: none; 
     z-index: 0;
 }
 
@@ -2102,34 +2352,40 @@ body.scrolling .symbol-connector path {
 }
 
 .table-wrapper {
-    overflow-x: auto;
-    margin-top: var(--spacing-lg);
+    overflow: hidden;
+    margin-top: var(--spacing-sm);
     opacity: 1;
     visibility: visible;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .comparison-table {
-    width: 100%;
     border-collapse: collapse;
-    background: rgba(26, 31, 58, 0.4);
+    background: rgba(26, 31, 58, 0.6);
+    backdrop-filter: blur(10px);
     border-radius: 12px;
     overflow: hidden;
-    min-width: 600px;
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: table !important;
 }
 
 .comparison-table th {
     background: rgba(37, 43, 71, 0.8);
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     text-align: left;
     font-weight: 600;
     color: var(--text-primary);
-    font-size: 1.125rem;
+    font-size: clamp(0.875rem, 1.2vw, 1rem);
 }
 
 .comparison-table td {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-secondary);
+    font-size: clamp(0.8rem, 1vw, 0.9rem);
 }
 
 .comparison-table tr:hover {
@@ -2175,10 +2431,16 @@ body.scrolling .symbol-connector path {
 }
 
 .decision-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
     gap: var(--spacing-md);
-    margin-top: var(--spacing-lg);
+    margin-top: var(--spacing-sm);
+    max-height: calc(100vh - 200px);
+    overflow: hidden;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 .decision-card {
@@ -2191,6 +2453,11 @@ body.scrolling .symbol-connector path {
     transition: all 0.3s ease;
     opacity: 1;
     visibility: visible;
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
 }
 
 .decision-card.card-matlab {
@@ -2211,14 +2478,17 @@ body.scrolling .symbol-connector path {
 }
 
 .decision-card h3 {
-    font-size: 1.25rem;
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
     font-weight: 700;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    margin-top: 0;
 }
 
 .decision-card ul {
     list-style: none;
     padding-left: 0;
+    margin: 0;
+    flex: 1;
 }
 
 .decision-card li {
@@ -2226,6 +2496,8 @@ body.scrolling .symbol-connector path {
     padding-left: var(--spacing-md);
     position: relative;
     color: var(--text-secondary);
+    font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+    line-height: 1.6;
 }
 
 .decision-card li::before {
@@ -2245,6 +2517,138 @@ body.scrolling .symbol-connector path {
 
 .decision-card.card-mathcad li::before {
     color: var(--mathcad-green);
+}
+
+/* Thank You Section */
+.thank-you-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+.thank-you-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: var(--spacing-xl);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+.thank-you-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto var(--spacing-lg);
+    color: var(--matlab-blue);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+.thank-you-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    background: linear-gradient(135deg, 
+        var(--matlab-blue) 0%, 
+        var(--maple-red) 50%, 
+        var(--mathcad-green) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+}
+
+.thank-you-subtitle {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+    line-height: 1.6;
+}
+
+.thank-you-logos {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin: var(--spacing-xl) 0;
+    flex-wrap: wrap;
+}
+
+.thank-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    animation: floatLogo 3s ease-in-out infinite;
+}
+
+.thank-logo:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.thank-logo:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.thank-logo:nth-child(3) {
+    animation-delay: 1s;
+}
+
+.thank-logo.logo-matlab {
+    background: linear-gradient(135deg, var(--matlab-blue), var(--matlab-blue-dark));
+    box-shadow: 0 10px 30px rgba(0, 118, 165, 0.4);
+}
+
+.thank-logo.logo-maple {
+    background: linear-gradient(135deg, var(--maple-red), var(--maple-red-dark));
+    box-shadow: 0 10px 30px rgba(213, 0, 0, 0.4);
+}
+
+.thank-logo.logo-mathcad {
+    background: linear-gradient(135deg, var(--mathcad-green), var(--mathcad-green-dark));
+    box-shadow: 0 10px 30px rgba(0, 168, 89, 0.4);
+}
+
+.thank-logo:hover {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.thank-you-footer {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-top: var(--spacing-lg);
+    font-style: italic;
+}
+
+@keyframes floatLogo {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 /* CTA Section */
@@ -2344,6 +2748,254 @@ body.scrolling .symbol-connector path {
     color: var(--text-muted);
     max-width: 600px;
     margin: 0 auto;
+}
+
+/* Responsive Design - 1440x768 */
+@media (max-width: 1440px) and (max-height: 768px) {
+    .container {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    
+    .section-title {
+        font-size: clamp(1rem, 2vw, 1.5rem);
+        margin-bottom: 0.75rem;
+        margin-top: 0;
+        line-height: 1.2;
+    }
+    
+    .introduction .section-title {
+        margin-top: 0;
+        margin-bottom: 0.75rem;
+    }
+    
+    .criterion-title {
+        font-size: clamp(1rem, 1.8vw, 1.3rem);
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+    }
+    
+    .criterion-grid {
+        gap: 0.5rem;
+        max-height: calc(100vh - 120px);
+    }
+    
+    .criterion-card {
+        padding: 0.5rem;
+    }
+    
+    .criterion-card h4 {
+        font-size: clamp(0.85rem, 1.2vw, 1rem);
+        margin-bottom: 0.4rem;
+    }
+    
+    .criterion-card p {
+        font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+        line-height: 1.3;
+    }
+    
+    .philosophy-grid {
+        gap: 0.5rem;
+    }
+    
+    .philosophy-card {
+        padding: 0.5rem;
+    }
+    
+    .philosophy-card h3 {
+        font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+        margin-bottom: 0.4rem;
+    }
+    
+    .philosophy-card p {
+        font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+        line-height: 1.3;
+    }
+    
+    .intro-text {
+        font-size: clamp(0.75rem, 1vw, 0.85rem);
+        line-height: 1.4;
+        margin-bottom: 0.5rem;
+    }
+    
+    .comparison-table {
+        font-size: clamp(0.65rem, 0.8vw, 0.75rem);
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+        padding: 0.4rem;
+    }
+    
+    .example-task .container {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    
+    .example-task-layout,
+    .life-example-layout {
+        padding-top: 0;
+        padding-bottom: 5px;
+        max-height: calc(100vh - 40px);
+        overflow: visible;
+        height: auto;
+        min-height: calc(100vh - 40px);
+    }
+    
+    .task-left .section-title,
+    .life-example-left .section-title {
+        font-size: clamp(1rem, 1.8vw, 1.3rem);
+        margin-bottom: 0.5rem;
+        margin-top: 0;
+        padding-top: 0;
+        line-height: 1.2;
+    }
+    
+    .task-intro {
+        margin-bottom: 0.4rem;
+    }
+    
+    .task-title {
+        font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+        margin-bottom: 0.3rem;
+        line-height: 1.3;
+    }
+    
+    .task-description {
+        font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+        line-height: 1.3;
+        margin-bottom: 0.3rem;
+    }
+    
+    .equation-box {
+        padding: 0.3rem 0.5rem;
+        margin: 0.3rem 0;
+    }
+    
+    .equation {
+        font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+    }
+    
+    .task-right {
+        padding-left: 0.75rem;
+        overflow: visible;
+    }
+    
+    .solution-single {
+        gap: 0.3rem;
+    }
+    
+    .solution-program-title {
+        font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+        margin-bottom: 0.3rem;
+    }
+    
+    .code-block {
+        overflow: visible;
+    }
+    
+    .code-block pre,
+    .solution-code pre {
+        font-size: clamp(0.55rem, 0.7vw, 0.65rem);
+        padding: 0.4rem;
+        line-height: 1.3;
+        margin-bottom: 0.3rem;
+    }
+    
+    .solution-result {
+        font-size: clamp(0.55rem, 0.7vw, 0.65rem);
+        padding: 0.4rem;
+        line-height: 1.3;
+        margin-top: 0.3rem;
+    }
+    
+    .console-output {
+        font-size: clamp(0.55rem, 0.7vw, 0.65rem);
+        padding: 0.4rem;
+        margin: 0.3rem 0;
+    }
+    
+    .real-life-examples .container {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    
+    .life-example-left {
+        padding-right: 0.75rem;
+        overflow: visible;
+    }
+    
+    .life-example-right {
+        padding-left: 0.75rem;
+        overflow: visible;
+    }
+    
+    .life-example-card {
+        padding: 0.4rem;
+    }
+    
+    .example-title {
+        font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+        margin-bottom: 0.3rem;
+        line-height: 1.3;
+    }
+    
+    .example-situation p {
+        font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+        line-height: 1.3;
+        margin-bottom: 0.3rem;
+    }
+    
+    .decision-cards {
+        gap: 0.5rem;
+    }
+    
+    .decision-card {
+        padding: 0.5rem;
+    }
+    
+    .decision-card h3 {
+        font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+        margin-bottom: 0.4rem;
+    }
+    
+    .decision-card p {
+        font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+        line-height: 1.3;
+    }
+    
+    .section-subtitle {
+        font-size: clamp(0.75rem, 1vw, 0.85rem);
+        margin-bottom: 0.5rem;
+    }
+    
+    .hero-title {
+        font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+        margin-bottom: 0.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: clamp(0.9rem, 1.8vw, 1.3rem);
+        margin-bottom: 1rem;
+    }
+    
+    .logo {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .logo-inner {
+        font-size: 2rem;
+    }
+    
+    .thank-you-title {
+        font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    }
+    
+    .thank-you-subtitle {
+        font-size: clamp(0.9rem, 1.8vw, 1.3rem);
+    }
 }
 
 /* Responsive Design */
